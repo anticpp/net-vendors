@@ -18,4 +18,4 @@ Get help message, run command with none arguments:
 sh tr.sh
 ```
 
-
+> BUG-FIX: Fail when number of hops greater than 10.

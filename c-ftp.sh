@@ -1,17 +1,28 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]
+RAND_FILE=".random.dat"
+
+###
+if [ $# -ne 3 ]
 then
     cat << END
-usage: $0 <address>
+usage: $0 <address> <user> <password>
 
 END
     exit 1
 fi
 addr=$1
+user=$2
+password=$3
 
-echo "Testing Upload ${addr}"
-curl -u xlftp:xlftp1212 -T "random.dat" ftp://${addr}
+echo "Generating a random test file ..."
+dd if=/dev/random of=${RAND_FILE} count=50000
 
-echo "Testing Download ${addr}"
-wget --user=xlftp --password=xlftp1212 -P ./ ftp://${addr}/random.dat -O /dev/null
+echo "Testing Upload ${addr} ..."
+curl -u ${user}:${password} -T "${RAND_FILE}" ftp://${addr}
+
+echo "Testing Download ${addr} ..."
+wget --user=${user} --password=${password} -P ./ ftp://${addr}/${RAND_FILE} -O /dev/null
+
+echo "Cleaning rubbish ..."
+rm -vf ${RAND_FILE}
